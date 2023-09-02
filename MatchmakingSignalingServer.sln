@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatchmakingSignalingServer", "MatchmakingSignalingServer\MatchmakingSignalingServer.csproj", "{D876C2C9-D25A-4C8F-8B0B-3DA53340F41D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatchmakingSignalingServer.API", "MatchmakingSignalingServer\MatchmakingSignalingServer.API.csproj", "{D876C2C9-D25A-4C8F-8B0B-3DA53340F41D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatchmakingSignalingServer.DataAccess", "MatchmakingSignalingServer.DataAccess\MatchmakingSignalingServer.DataAccess.csproj", "{3F9303E3-54A2-4C21-97DD-8F5B8065BD36}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchmakingSignalingServer.Domain", "..\MatchmakingSignalingServer.Domain\MatchmakingSignalingServer.Domain.csproj", "{B96695A0-92D7-4992-B495-441D8681FBA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchmakingSignalingServer.Infrastructure", "..\MatchmakingSignalingServer.Infrastructure\MatchmakingSignalingServer.Infrastructure.csproj", "{8589686A-3554-4A28-81E0-B012EEC9F80C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +19,14 @@ Global
 		{D876C2C9-D25A-4C8F-8B0B-3DA53340F41D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D876C2C9-D25A-4C8F-8B0B-3DA53340F41D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D876C2C9-D25A-4C8F-8B0B-3DA53340F41D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3F9303E3-54A2-4C21-97DD-8F5B8065BD36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F9303E3-54A2-4C21-97DD-8F5B8065BD36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3F9303E3-54A2-4C21-97DD-8F5B8065BD36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3F9303E3-54A2-4C21-97DD-8F5B8065BD36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B96695A0-92D7-4992-B495-441D8681FBA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B96695A0-92D7-4992-B495-441D8681FBA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B96695A0-92D7-4992-B495-441D8681FBA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B96695A0-92D7-4992-B495-441D8681FBA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8589686A-3554-4A28-81E0-B012EEC9F80C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8589686A-3554-4A28-81E0-B012EEC9F80C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8589686A-3554-4A28-81E0-B012EEC9F80C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8589686A-3554-4A28-81E0-B012EEC9F80C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

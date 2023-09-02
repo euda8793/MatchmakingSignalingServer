@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>785ac893-13c7-4075-88ee-f2eeac454367</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\galaxysoldiers.apple-touch-icon.png" />
+    <None Include="wwwroot\galaxysoldiers.audio.worklet.js" />
+    <None Include="wwwroot\galaxysoldiers.icon.png" />
+    <None Include="wwwroot\galaxysoldiers.js" />
+    <None Include="wwwroot\galaxysoldiers.pck" />
+    <None Include="wwwroot\galaxysoldiers.png" />
+    <None Include="wwwroot\galaxysoldiers.wasm" />
+    <None Include="wwwroot\galaxysoldiers.worker.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\MatchmakingSignalingServer.Domain\MatchmakingSignalingServer.Domain.csproj" />
+    <ProjectReference Include="..\..\MatchmakingSignalingServer.Infrastructure\MatchmakingSignalingServer.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
