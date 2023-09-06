@@ -18,7 +18,7 @@
 		5. **User A** polls the **Service** periodically for the current *SignalingStep* pertaining to **User B's** *PlayerClient*, and thus receives the *Answer* placed by **User B's** *PlayerClient*.
 			- Since **User A** is the *PlayerHost*, this step is not limited to just **User B's** *PlayerClient*, and multiple *SignalingSteps* from other *PlayerClients* could show up in the result set retrieved from polling.
 		6. **User A** accepts the *Answer*, then notifies the **System** to updates its corresponding *PlayerHost*'s *ConnectionStatusTime* to the current time.
-6. Every joined *PlayerClient* will perform a *Handshake* with the *PlayerHost*.
+6. Every joined *PlayerClient* **User** will perform a *Handshake* with the *PlayerHost* **User**.
 10. **User B** can periodically poll the **System** to see if it is still within the *GameSession*. 
 11. **User B** can tell the **System** it would like to be removed from its current *GameSession*, in which the **System** will remove it.
 	- *PlayerClients* can only exist on 1 *GameSession* at a time. 
