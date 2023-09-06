@@ -5,9 +5,13 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatchmakingSignalingServer.API", "MatchmakingSignalingServer\MatchmakingSignalingServer.API.csproj", "{D876C2C9-D25A-4C8F-8B0B-3DA53340F41D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchmakingSignalingServer.Domain", "..\MatchmakingSignalingServer.Domain\MatchmakingSignalingServer.Domain.csproj", "{B96695A0-92D7-4992-B495-441D8681FBA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatchmakingSignalingServer.Domain", "..\MatchmakingSignalingServer.Domain\MatchmakingSignalingServer.Domain.csproj", "{B96695A0-92D7-4992-B495-441D8681FBA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchmakingSignalingServer.Infrastructure", "..\MatchmakingSignalingServer.Infrastructure\MatchmakingSignalingServer.Infrastructure.csproj", "{8589686A-3554-4A28-81E0-B012EEC9F80C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatchmakingSignalingServer.Infrastructure", "..\MatchmakingSignalingServer.Infrastructure\MatchmakingSignalingServer.Infrastructure.csproj", "{8589686A-3554-4A28-81E0-B012EEC9F80C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchmakingSignalingServer.API.Test", "MatchmakingSignalingServer.API.Test\MatchmakingSignalingServer.API.Test.csproj", "{7ADD6F82-DD81-4321-AF7A-6AE180F300D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchmakingSignalingServer.Domain.Test", "MatchmakingSignalingServer.Domain.Test\MatchmakingSignalingServer.Domain.Test.csproj", "{C032FFFC-3322-4A73-A9DF-F1C25B85B459}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{8589686A-3554-4A28-81E0-B012EEC9F80C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8589686A-3554-4A28-81E0-B012EEC9F80C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8589686A-3554-4A28-81E0-B012EEC9F80C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ADD6F82-DD81-4321-AF7A-6AE180F300D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ADD6F82-DD81-4321-AF7A-6AE180F300D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ADD6F82-DD81-4321-AF7A-6AE180F300D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ADD6F82-DD81-4321-AF7A-6AE180F300D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C032FFFC-3322-4A73-A9DF-F1C25B85B459}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C032FFFC-3322-4A73-A9DF-F1C25B85B459}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C032FFFC-3322-4A73-A9DF-F1C25B85B459}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C032FFFC-3322-4A73-A9DF-F1C25B85B459}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

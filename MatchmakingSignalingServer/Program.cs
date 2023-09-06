@@ -1,11 +1,3 @@
-using MatchmakingSignalingServer.Authentication;
-using MatchmakingSignalingServer.Constants;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.FileProviders;
-using System.Linq;
-using System.Net;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -39,12 +31,6 @@ app.UseStaticFiles(new StaticFileOptions
              "Cross-Origin-Opener-Policy", "same-origin");
     }
 });
-
-//app.UseStaticFiles(new StaticFileOptions
-//{
-//    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\galaxysoldiers.html")),
-//    RequestPath = new PathString("/game")
-//});
 
 //var matchesGroup = app.MapGroup("matches").AddEndpointFilter<ApiKeyEndpointFilter>();
 //var connectionsGroup = app.MapGroup("connections").AddEndpointFilter<ApiKeyEndpointFilter>();
