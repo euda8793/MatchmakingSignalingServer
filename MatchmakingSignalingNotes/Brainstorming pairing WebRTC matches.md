@@ -14,7 +14,7 @@
 			- **User B** is responsible for validating the response from **System** to ensure its *SignalingState* aligns and can request a *SignalingReset* if there is a *SignalingMismatch*.
 		3. **User B** accepts the *Offer*, then provides the **System** an *Answer*.
 			- The *Answer* is persisted the same way as the the *Offer*, within a *SignalingStep*.
-		4. User B verifies connectivity then notifies the **System** to update its corresponding *PlayerClient* *ConnectionStatusTime* to the current time. 
+		4. **User B** verifies connectivity then notifies the **System** to update its corresponding *PlayerClient* *ConnectionStatusTime* to the current time. 
 		5. **User A** polls the **Service** periodically for the current *SignalingStep* pertaining to **User B's** *PlayerClient*, and thus receives the *Answer* placed by **User B's** *PlayerClient*.
 			- Since **User A** is the *PlayerHost*, this step is not limited to just **User B's** *PlayerClient*, and multiple *SignalingSteps* from other *PlayerClients* could show up in the result set retrieved from polling.
 		6. **User A** accepts the *Answer*, then notifies the **System** to updates its corresponding *PlayerHost*'s *ConnectionStatusTime* to the current time.
