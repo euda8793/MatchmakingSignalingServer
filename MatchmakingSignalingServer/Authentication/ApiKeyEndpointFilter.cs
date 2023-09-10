@@ -1,5 +1,3 @@
-using MatchmakingSignalingServer.Constants;
-
 namespace MatchmakingSignalingServer.Authentication;
 
 public class ApiKeyEndpointFilter : IEndpointFilter

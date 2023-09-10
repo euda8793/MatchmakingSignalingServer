@@ -2,8 +2,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-//builder.Services.AddDbContext<MatchesDbContext>(opt => opt.UseSqlLite(Environem));
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddValidatorsFromAssemblyContaining<HostGameSessionRequestValidator>();
 
 var app = builder.Build();
 
@@ -32,12 +32,11 @@ app.UseStaticFiles(new StaticFileOptions
     }
 });
 
-//var matchesGroup = app.MapGroup("matches").AddEndpointFilter<ApiKeyEndpointFilter>();
-//var connectionsGroup = app.MapGroup("connections").AddEndpointFilter<ApiKeyEndpointFilter>();
+var gameSessionsRoutes = app.MapGroup("gamesessions");
 
-//matchesGroup.MapGet("/", () => { return "Hello world"; });
-//matchesGroup.MapGet("/a", () => { return "Hello world"; });
-//matchesGroup.MapGet("/b", () => { return "Hello world"; });
-//connectionsGroup.MapGet("/", () => { return "Hello world"; });
+if (!app.Environment.IsDevelopment())
+{
+    gameSessionsRoutes.AddEndpointFilter<ApiKeyEndpointFilter>();
+}
 
 app.Run();

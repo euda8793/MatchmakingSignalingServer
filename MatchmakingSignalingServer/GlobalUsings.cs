@@ -1,2 +1,13 @@
 global using MatchmakingSignalingServer.Constants;
 global using Microsoft.AspNetCore.StaticFiles;
+global using MatchmakingSignalingServer.Authentication;
+global using MatchmakingSignalingServer.Domain;
+global using MatchmakingSignalingServer.Domain.UseCaseHandlers;
+global using MatchmakingSignalingServer.Domain.UseCases;
+global using MatchmakingSignalingServer.Domain.GameSessionEntities.OwnedTypes;
+global using MatchmakingSignalingServer.Domain.Exceptions;
+global using MatchmakingSignalingServer.API.Requests;
+global using MatchmakingSignalingServer.API;
+global using MatchmakingSignalingServer.API.Validators;
+global using AutoMapper;
+global using FluentValidation;

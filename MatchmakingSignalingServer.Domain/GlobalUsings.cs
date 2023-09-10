@@ -3,6 +3,9 @@ global using System.Linq;
 global using System.Text;
 global using System.Threading.Tasks;
 global using System;
-global using MatchmakingSignalingServer.Domain.GameSession.OwnedTypes;
-global using MatchmakingSignalingServer.Domain.GameSession.Entities;
-
+global using MatchmakingSignalingServer.Domain.Exceptions;
+global using MatchmakingSignalingServer.Domain.GameSessionEntities.OwnedTypes;
+global using MatchmakingSignalingServer.Domain.GameSessionEntities;
+global using MatchmakingSignalingServer.Domain.UseCases;
+global using MatchmakingSignalingServer.Domain;
+global using Microsoft.EntityFrameworkCore;
