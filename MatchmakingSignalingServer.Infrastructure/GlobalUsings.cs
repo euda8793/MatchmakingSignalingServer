@@ -5,5 +5,5 @@ global using System.Text;
 global using System.Threading.Tasks;
 global using Microsoft.EntityFrameworkCore;
 global using MatchmakingSignalingServer.Domain.GameSessionEntities;
-global using MatchmakingSignalingServer.Domain.GameSessionEntities.OwnedTypes;
+global using MatchmakingSignalingServer.Domain.GameSessionEntities.ValueTypes;
 global using MatchmakingSignalingServer.Domain;

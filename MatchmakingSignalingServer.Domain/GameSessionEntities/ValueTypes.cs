@@ -1,11 +1,14 @@
-﻿namespace MatchmakingSignalingServer.Domain.GameSessionEntities.OwnedTypes;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.VisualBasic;
+
+namespace MatchmakingSignalingServer.Domain.GameSessionEntities.ValueTypes;
 
 public enum ConnectionState
 {
-    WAITING_FOR_OFFER = 0,
-    HANDSHAKE = 1,
-    CONNECTED = 2,
-    IS_HOST = 3
+    CONNECTING = 0,
+    CONNECTED = 1,
+    DISCONNECTED = 2,
+    IS_HOST = 3 
 }
 
 public enum InformationType
@@ -30,37 +33,67 @@ public static class IntEnum
     }
 }
 
+public static class TypeAssist
+{
+    public static bool FalseIfThrows<T>(Func<T> getResult, out T? result)
+    {
+        try
+        {
+            result = getResult(); 
+        }
+        catch (Exception e) when (e is ArgumentNullException || e is FormatException || e is ArgumentOutOfRangeException)
+        {
+            result = default(T);
+            return false;
+        }
+
+        return true;
+    }
+}
+
 public record GameSessionCount(int Count)
 {
     public const int Minimum = 1;
     public const int Maximium = 100;
-    
+
+    public void Validate() => Create(Count);
+
     public static GameSessionCount Create(int count)
     {
         if (count < Minimum || count > Maximium) throw new ArgumentOutOfRangeException($"{nameof(GameSessionCount)} - {nameof(count)}");
         return new GameSessionCount(count);
     }
+
+    public static bool TryParse(string? value, IFormatProvider? formatProvider, out GameSessionCount? result) => 
+        TypeAssist.FalseIfThrows(() => Create(int.Parse(value)), out result);
 }
 
 public record GameSessionName(string Name)
 {
     public const int MaxGameSessionNameChars = 128;
-    public const int MinGameSessionNameChars = 12;
+    public const int MinGameSessionNameChars = 8;
+
+    public void Validate() => Create(Name);
+
     public static GameSessionName Create(string? name)
     {
         if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
         if (name.Count() > MaxGameSessionNameChars || name.Count() < MinGameSessionNameChars) throw new ArgumentOutOfRangeException(nameof(name));
         return new GameSessionName(name);
     }
+    public static bool TryParse(string? value, IFormatProvider? formatProvider, out GameSessionName? result) => 
+        TypeAssist.FalseIfThrows(() => Create(value), out result);
 }
 
 public record IceCandidate(string Media, string Index, string Name)
 {
+    public void Validate() => With(Media, Index, Name);
+
     public static IceCandidate With(string? media, string? index, string? name)
     {
-        if (string.IsNullOrEmpty(media)) throw new ArgumentNullException(nameof(media));
-        if (string.IsNullOrEmpty(index)) throw new ArgumentNullException(nameof(index));
-        if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+        if (string.IsNullOrEmpty(media)) throw new ArgumentNullException(nameof(Media));
+        if (string.IsNullOrEmpty(index)) throw new ArgumentNullException(nameof(Index));
+        if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(Name));
 
         return new IceCandidate(media, index, name);
     }
@@ -68,6 +101,8 @@ public record IceCandidate(string Media, string Index, string Name)
 
 public record SessionDescription(string SessionType, string Sdp)
 {
+    public void Validate() => With(SessionType, Sdp);   
+
     public static SessionDescription With(string? sessionType, string? sdp)
     {
         if (string.IsNullOrEmpty(sessionType)) throw new ArgumentNullException(nameof(sessionType));
@@ -80,8 +115,10 @@ public record SessionDescription(string SessionType, string Sdp)
 
 public record PlayerName(string Name)
 {
-    public const int MaxPlayerNameChars = 64;
-    public const int MinPlayerNameChars = 8;
+    public const int MaxPlayerNameChars = 48;
+    public const int MinPlayerNameChars = 6;
+
+    public void Validate() => Create(Name);
 
     public static PlayerName Create(string? name)
     {
@@ -89,5 +126,8 @@ public record PlayerName(string Name)
         if (name.Count() > MaxPlayerNameChars || name.Count() < MinPlayerNameChars) throw new ArgumentOutOfRangeException(nameof(name));
         return new PlayerName(name);
     }
+
+    public static bool TryParse(string? value, IFormatProvider? formatProvider, out PlayerName? result) => 
+        TypeAssist.FalseIfThrows(() => Create(value), out result);
 }
 

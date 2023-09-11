@@ -1,25 +1,26 @@
 ﻿namespace MatchmakingSignalingServer.Domain.UseCaseHandlers;
 
-internal class UpdateSignalingStepHandler : IUseCaseHandler<UpdateSignalingStep>
+internal class ReconnectPlayerToGameSessionHandler : IUseCaseHandler<ReconnectPlayerToGameSession>
 {
     private readonly IGameSessionData gameSessionData;
 
-    public UpdateSignalingStepHandler(IGameSessionData gameSessionData)
+    public ReconnectPlayerToGameSessionHandler(IGameSessionData gameSessionData)
     {
         this.gameSessionData = gameSessionData;
     }
 
-    public async Task<UseCaseResult> Handle(UpdateSignalingStep useCase)
+    public async Task<UseCaseResult> Handle(ReconnectPlayerToGameSession useCase)
     {
         var gameSession = await gameSessionData
             .GameSessions
             .AsTracking()
             .Include(x => x.Steps)
+            .Include(x => x.Clients)
             .FirstAsync(x => x.GameSessionName == useCase.GameSessionName);
 
-        gameSession.UpdateStep(useCase.RequestingPlayerName, useCase.InformationType, useCase.IceCandidate, useCase.SessionDescription);
-        await gameSessionData.SaveChangesAsync();
+        gameSession.ReconnectPlayer(useCase.ReconnectingPlayerName);
 
+        await gameSessionData.SaveChangesAsync();
         return new UseCaseResult();
     }
 }

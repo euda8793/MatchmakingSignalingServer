@@ -1,24 +1,23 @@
 ﻿namespace MatchmakingSignalingServer.Domain.UseCaseHandlers;
 
-internal class JoinGameSessionHandler : IUseCaseHandler<JoinGameSession>
+internal class UpdatePlayerTimeHandler : IUseCaseHandler<UpdatePlayerTime>
 {
     private readonly IGameSessionData gameSessionData;
 
-    public JoinGameSessionHandler(IGameSessionData gameSessionData)
+    public UpdatePlayerTimeHandler(IGameSessionData gameSessionData)
     {
         this.gameSessionData = gameSessionData;
     }
 
-    public async Task<UseCaseResult> Handle(JoinGameSession useCase)
+    public async Task<UseCaseResult> Handle(UpdatePlayerTime useCase)
     {
         var gameSession = await gameSessionData
             .GameSessions
             .AsTracking()
             .Include(x => x.Clients)
-            .Include(x => x.Steps)
             .FirstAsync(x => x.GameSessionName == useCase.GameSessionName);
 
-        gameSession.AddPlayerToGameSession(useCase.JoiningPlayerName);
+        gameSession.UpdatePlayerExpirationTime(useCase.RefreshedPlayerName);
 
         await gameSessionData.SaveChangesAsync();
         return new UseCaseResult();

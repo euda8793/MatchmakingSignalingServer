@@ -7,10 +7,19 @@ public class PlayerClient
     public ConnectionState ConnectionState { get; set; }
 
     public GameSession GameSession { get; set; }
+
+    public DateTime Expiration { get; set; }
     
+    public PlayerClient() { }
     public PlayerClient(PlayerName playerName, bool isHost = false) 
     {
         PlayerName = playerName;
-        ConnectionState = isHost ? ConnectionState.IS_HOST : ConnectionState.WAITING_FOR_OFFER;
+        ConnectionState = isHost ? ConnectionState.IS_HOST : ConnectionState.CONNECTING;
+        Refresh();
+    }
+
+    public void Refresh()
+    {
+        Expiration = DateTime.UtcNow.AddMinutes(5);
     }
 }

@@ -2,17 +2,39 @@
 
 public class GameSession
 {
+    #region Properties
+
     public GameSessionName GameSessionName { get; set; }
 
     public ICollection<PlayerClient> Clients { get; init; } = new List<PlayerClient>();
 
     public ICollection<SignalingStep> Steps { get; init; } = new List<SignalingStep>();
 
+    #endregion
+
+    public GameSession() { }
+
     public GameSession(GameSessionName gameSessionName, PlayerName playerName) 
     { 
         GameSessionName = gameSessionName;
         Clients.Add(new PlayerClient(playerName, true));
     }
+
+    #region Retrieval Helpers 
+
+    private PlayerClient Host => Clients.First(x => x.ConnectionState == ConnectionState.IS_HOST);
+    
+    private PlayerClient Player(PlayerName playerName) => Clients.First(x => x.PlayerName == playerName);
+
+    private SignalingStep StepSource(PlayerName source) => Steps.First(x => x.Source == source);
+
+    private SignalingStep StepSourceTarget(PlayerName source, PlayerName target) => Steps.First(x => x.Source == source || x.Target == target);
+
+    private List<SignalingStep> StepsTargetingHost => Steps.Where(x => x.Target == Host.PlayerName).ToList();
+
+    #endregion
+
+    #region Private
 
     private void ThrowIfPlayerExists(PlayerName playerName) 
     {
@@ -22,55 +44,84 @@ public class GameSession
         }
     } 
 
-    private void ResetSignalingStepsForPlayer(PlayerName playerName)
+    private void RemoveStepsForPlayer(PlayerName playerName)
     {
-        if (Steps is List<SignalingStep> steps)
+        if (Steps is List<SignalingStep> stepList) 
         {
-            steps.RemoveAll(x => x.Source == playerName || x.Target == playerName);
+            stepList.RemoveAll(x => x.Target == playerName || x.Source == playerName);
         }
     }
-    private void AddSignalingStepsBetweenHostAndPlayer(PlayerName playerName, PlayerName hostName)
+
+    private void InitiateSignalingProcess(PlayerName playerName)
     {
-        Steps.Add(new SignalingStep(hostName, playerName));
-        Steps.Add(new SignalingStep(playerName, hostName));
+        var playerClient = Player(playerName);
+        playerClient.ConnectionState = ConnectionState.CONNECTING;
+        RemoveStepsForPlayer(playerName);
+        Steps.Add(new SignalingStep(Host.PlayerName, playerName));
+        playerClient.Refresh();
     }
+
+    #endregion
+
+    #region Public 
 
     public void AddPlayerToGameSession(PlayerName playerName)
     {
         ThrowIfPlayerExists(playerName);
         Clients.Add(new PlayerClient(playerName));
-        ResetSignalingStepsForPlayer(playerName);
-
-        var hostName = Clients.First(x => x.ConnectionState == ConnectionState.IS_HOST).PlayerName;
-        AddSignalingStepsBetweenHostAndPlayer(playerName, hostName);
+        InitiateSignalingProcess(playerName);
     }
 
     public bool IsPlayerHost(PlayerName leavingPlayerOrHostName)
     {
-        var player = Clients.First(x => x.PlayerName == leavingPlayerOrHostName);
-        return player.ConnectionState == ConnectionState.IS_HOST;
+        return Player(leavingPlayerOrHostName).ConnectionState == ConnectionState.IS_HOST;
     }
 
     public void RemovePlayer(PlayerName playerName)
     {
-        var player = Clients.First(x => x.PlayerName == playerName);
-        if (Steps is List<SignalingStep> stepList) 
-        {
-            stepList.RemoveAll(x => x.Target == playerName || x.Source == playerName);
-        }
-        
+        var player = Player(playerName);
+        RemoveStepsForPlayer(playerName);
         Clients.Remove(player);
     }
 
     public SignalingStep GetSignalingStepToPlayer(PlayerName requestingPlayerName)
     {
-        var playerHost = Clients.First(x => x.ConnectionState == ConnectionState.IS_HOST);
-        return Steps.First(x => x.Source == playerHost.PlayerName && x.Target == requestingPlayerName);
+        return StepSourceTarget(Host.PlayerName, requestingPlayerName);
     }
 
     public List<SignalingStep> GetSignalingStepsForHost()
     {
-        var playerHost = Clients.First(x => x.ConnectionState == ConnectionState.IS_HOST);
-        return Steps.Where(x => x.Target == playerHost.PlayerName).ToList();
+        return StepsTargetingHost;
     }
+
+    public void UpdateStep(PlayerName requestingPlayerName, InformationType informationType, IceCandidate? iceCandidate, SessionDescription? sessionDescription)
+    {
+        StepSource(requestingPlayerName)
+            .Update(informationType, sessionDescription, iceCandidate);
+    }
+    public void UpdateStepFromHost(PlayerName targetPlayerName, InformationType informationType, IceCandidate? iceCandidate, SessionDescription? sessionDescription)
+    {
+        StepSourceTarget(Host.PlayerName, Player(targetPlayerName).PlayerName)
+            .Update(informationType, sessionDescription, iceCandidate);
+    }
+
+    public void UpdatePlayerToConnected(PlayerName connectedPlayerName)
+    {
+        Player(connectedPlayerName).ConnectionState = ConnectionState.CONNECTED;
+        RemoveStepsForPlayer(connectedPlayerName);
+    }
+
+    public void ReconnectPlayer(PlayerName reconnectingPlayerName)
+    {
+        if (IsPlayerHost(reconnectingPlayerName)) throw new ArgumentException("Host player can't be reconnected.");
+
+        InitiateSignalingProcess(reconnectingPlayerName);
+    }
+
+    public void UpdatePlayerExpirationTime(PlayerName refreshedPlayerName)
+    {
+        Player(refreshedPlayerName).Refresh();
+    }
+
+    #endregion
 }

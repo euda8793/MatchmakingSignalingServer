@@ -1,17 +1,25 @@
 ﻿namespace MatchmakingSignalingServer.Domain.UseCases;
 
-public record HostGameSession(GameSessionName GameSessionName, PlayerName HostPlayerName);
+public record UseCase;
 
-public record RetrieveGameSessions(GameSessionCount NumberOfGameSessions);
+public record HostGameSession(GameSessionName GameSessionName, PlayerName HostPlayerName) : UseCase;
 
-public record JoinGameSession(GameSessionName GameSessionName, PlayerName JoiningPlayerName);
+public record RetrieveGameSessions(GameSessionCount NumberOfGameSessions) : UseCase;
 
-public record LeaveGameSession(GameSessionName GameSessionName, PlayerName LeavingPlayerOrHostName);
+public record JoinGameSession(GameSessionName GameSessionName, PlayerName JoiningPlayerName) : UseCase;
 
-public record CheckSignalingInfoFromHost(GameSessionName GameSessionName, PlayerName RequestingPlayerName);
+public record LeaveGameSession(GameSessionName GameSessionName, PlayerName LeavingPlayerOrHostName) : UseCase;
 
-public record CheckSignalingInfoToPlayers(GameSessionName GameSessionName);
+public record CheckSignalingInfoFromHost(GameSessionName GameSessionName, PlayerName RequestingPlayerName) : UseCase;
 
-public record UpdateSignalingStep(GameSessionName GameSessionName, PlayerName RequestingPlayerName, InformationType InformationType, IceCandidate? IceCandidate, SessionDescription? SessionDescription);
+public record CheckSignalingInfoToPlayers(GameSessionName GameSessionName) : UseCase;
 
-public record UpdateSignalingStepFromHost(GameSessionName GameSessionName, PlayerName TargetPlayerName, InformationType InformationType, IceCandidate? IceCandidate, SessionDescription? SessionDescription);
+public record UpdateSignalingStep(GameSessionName GameSessionName, PlayerName RequestingPlayerName, InformationType InformationType, IceCandidate? IceCandidate, SessionDescription? SessionDescription) : UseCase;
+
+public record UpdateSignalingStepFromHost(GameSessionName GameSessionName, PlayerName TargetPlayerName, InformationType InformationType, IceCandidate? IceCandidate, SessionDescription? SessionDescription) : UseCase;
+
+public record NotifyPlayerConnected(GameSessionName GameSessionName, PlayerName ConnectedPlayerName) : UseCase;
+
+public record ReconnectPlayerToGameSession(GameSessionName GameSessionName, PlayerName ReconnectingPlayerName) : UseCase;
+
+public record UpdatePlayerTime(GameSessionName GameSessionName, PlayerName RefreshedPlayerName) : UseCase;

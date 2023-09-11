@@ -23,7 +23,7 @@ internal class HostGameSessionHandler : IUseCaseHandler<HostGameSession>
 
         var newGameSession = new GameSession(useCase.GameSessionName, useCase.HostPlayerName);
         await gameSessionData.GameSessions.AddAsync(newGameSession);
-        await gameSessionData.SaveAsync();
+        await gameSessionData.SaveChangesAsync();
 
         return new UseCaseResult();
     }

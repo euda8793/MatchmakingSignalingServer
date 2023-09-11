@@ -8,16 +8,16 @@ public class GameSessionDBContext : DbContext, IGameSessionData
 
     public DbSet<SignalingStep> SignalingSteps { get; set; }
 
-    private string dbPath = "";
+    public GameSessionDBContext() : base() { }
 
-    public GameSessionDBContext() 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
-        dbPath = Path.Join(path, "gamesessiondb.db");
+        var dbPath = Path.Join(path, "gamesessiondb.db");
+        Console.WriteLine(dbPath);
+        optionsBuilder.UseSqlite($"Data Source = {dbPath}"); 
     }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlite($"Data source={dbPath}");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

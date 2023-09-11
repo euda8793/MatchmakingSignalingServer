@@ -23,7 +23,6 @@ internal class CheckSignalingInfoToPlayersHandler : IUseCaseHandler<CheckSignali
         return new HostSignalingStepResult(
             signalingSteps.Select(
                 x => new PlayerSignalingStepResult(
-                    x.Source, 
                     x.InformationType, 
                     x.IceCandidate, 
                     x.SessionDescription))

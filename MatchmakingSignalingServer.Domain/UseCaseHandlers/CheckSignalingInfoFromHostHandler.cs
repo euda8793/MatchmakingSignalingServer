@@ -20,6 +20,6 @@ internal class CheckSignalingInfoFromHostHandler : IUseCaseHandler<CheckSignalin
 
         var signalingStep = gameSession.GetSignalingStepToPlayer(useCase.RequestingPlayerName);
 
-        return new PlayerSignalingStepResult(useCase.RequestingPlayerName, signalingStep.InformationType, signalingStep.IceCandidate, signalingStep.SessionDescription);
+        return new PlayerSignalingStepResult(signalingStep.InformationType, signalingStep.IceCandidate, signalingStep.SessionDescription);
     }
 }

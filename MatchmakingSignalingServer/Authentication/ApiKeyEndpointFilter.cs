@@ -15,7 +15,7 @@ public class ApiKeyEndpointFilter : IEndpointFilter
     {
         if(!context.HttpContext.Request.Headers.TryGetValue(EnvVarNames.API_KEY_HEADER_NAME, out var incomingApiKey))
         {
-            return new UnauthorizedResult(ResponseMessageText.NO_API_KEY_PROVIDED);
+            return TypedResults.Unauthorized();
         }
 
         var apiKey = 
@@ -25,7 +25,7 @@ public class ApiKeyEndpointFilter : IEndpointFilter
 
         if (!apiKey?.Equals(incomingApiKey) ?? true)
         {
-            return new UnauthorizedResult(ResponseMessageText.WRONG_API_PROVIDED);
+            return TypedResults.Unauthorized();
         }
 
         return await next(context);

@@ -3,14 +3,19 @@ namespace MatchmakingSignalingServer.API;
 
 public static class RequestHandler
 {
-    private static async Task<IResult> HandleUseCaseAndCatchExceptions<TUseCase>(IUseCaseHandler<TUseCase> handler, Func<TUseCase> getResult)
+    private static async Task<IResult> HandleUseCaseAndCatchExceptions(IResolveUseCaseHandler resolver, Func<UseCase> map, Action? preCallSteps = null)
     {
         UseCaseResult result;
 
         try
         {
-            var useCase = getResult();
-            result = await handler.Handle(useCase);
+            if(preCallSteps != null)
+            {
+                preCallSteps();
+            }
+
+            var useCase = map();
+            result = await resolver.ResolveAndHandleUseCase(useCase);
         }
         catch(ValidationException vE)
         {
@@ -38,31 +43,27 @@ public static class RequestHandler
         return TypedResults.Ok(result);
     }
 
-    public static Delegate Create<TRequest, TUseCase>()
+    #region Public
+
+    public static Delegate Create<TRequest>(Func<TRequest, UseCase> map)
     {
-        return async delegate (IUseCaseHandler<TUseCase> handler, TRequest request, IMapper mapper, IValidator<TRequest> validator)
+        return async delegate (IResolveUseCaseHandler resolver, TRequest request, IValidator<TRequest> validator)
         {
-            return await HandleUseCaseAndCatchExceptions(handler, () =>
-            {
-                validator.ValidateAndThrow(request);
-                return mapper.Map<TUseCase>(request);
-            });
+            return await HandleUseCaseAndCatchExceptions(
+                resolver, 
+                () => map(request), 
+                () => validator.ValidateAndThrow(request));
         };
     }
 
-    public static Delegate Create<TUseCase>()
+    public static Delegate Create(Func<UseCase> map)
     {
-        return async delegate (IUseCaseHandler<TUseCase> handler)
+        return async delegate (IResolveUseCaseHandler resolver)
         {
-            return await HandleUseCaseAndCatchExceptions(handler, () =>
-            {
-                var maybeUseCase = Activator.CreateInstance(typeof(TUseCase));
-                if (!(maybeUseCase is TUseCase useCase))
-                {
-                    throw new InvalidCastException($"An error occured while constructing a {typeof(TUseCase)} using its empty constructor.");
-                }
-                return useCase;
-            });
+            return await HandleUseCaseAndCatchExceptions(resolver, map);
         };
     }
+
+    #endregion
 }
+
