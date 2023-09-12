@@ -9,4 +9,3 @@ global using MatchmakingSignalingServer.API;
 global using MatchmakingSignalingServer.API.Exceptions;
 global using MatchmakingSignalingServer.Infrastructure;
 global using Microsoft.AspNetCore.Mvc;
-global using FluentValidation;
