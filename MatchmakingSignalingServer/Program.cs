@@ -44,12 +44,16 @@ app.UseStaticFiles(new StaticFileOptions
 
 #endregion
 
+#region Groups And Filtering
+
 var gameSessionsRoutes = app.MapGroup("GameSessions");
 
 if (!app.Environment.IsDevelopment())
 {
     gameSessionsRoutes.AddEndpointFilter<ApiKeyEndpointFilter>();
 }
+
+#endregion
 
 #region GET
 
