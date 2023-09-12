@@ -5,8 +5,6 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatchmakingSignalingServer.API", "MatchmakingSignalingServer\MatchmakingSignalingServer.API.csproj", "{D876C2C9-D25A-4C8F-8B0B-3DA53340F41D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatchmakingSignalingServer.API.Test", "MatchmakingSignalingServer.API.Test\MatchmakingSignalingServer.API.Test.csproj", "{7ADD6F82-DD81-4321-AF7A-6AE180F300D2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatchmakingSignalingServer.Domain.Test", "MatchmakingSignalingServer.Domain.Test\MatchmakingSignalingServer.Domain.Test.csproj", "{C032FFFC-3322-4A73-A9DF-F1C25B85B459}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7F93F762-F54B-44B2-9134-9E1DC79D23D9}"
@@ -25,10 +23,6 @@ Global
 		{D876C2C9-D25A-4C8F-8B0B-3DA53340F41D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D876C2C9-D25A-4C8F-8B0B-3DA53340F41D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D876C2C9-D25A-4C8F-8B0B-3DA53340F41D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7ADD6F82-DD81-4321-AF7A-6AE180F300D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7ADD6F82-DD81-4321-AF7A-6AE180F300D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7ADD6F82-DD81-4321-AF7A-6AE180F300D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7ADD6F82-DD81-4321-AF7A-6AE180F300D2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C032FFFC-3322-4A73-A9DF-F1C25B85B459}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C032FFFC-3322-4A73-A9DF-F1C25B85B459}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C032FFFC-3322-4A73-A9DF-F1C25B85B459}.Release|Any CPU.ActiveCfg = Release|Any CPU

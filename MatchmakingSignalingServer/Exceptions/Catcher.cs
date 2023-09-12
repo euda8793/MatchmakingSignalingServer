@@ -15,11 +15,11 @@ public static class Catcher
         }
         catch (InvalidOperationException e)
         {
-            return Results.BadRequest(e.Message);
+            return Results.NotFound(e.Message);
         }
         catch (Exception ex)
         {
-            //TODO: Log this better at some point
+            //TODO: Log this better at some point :D
             Console.WriteLine(ex.ToString());
             return Results.StatusCode(StatusCodes.Status500InternalServerError);
         }

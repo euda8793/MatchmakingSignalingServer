@@ -1,6 +1,6 @@
 ﻿namespace MatchmakingSignalingServer.Domain.UseCaseHandlers;
 
-internal class CheckSignalingInfoToPlayersHandler : IUseCaseHandler<CheckSignalingInfoToPlayers>
+internal class CheckSignalingInfoToPlayersHandler : IUseCaseHandler<CheckSignalWithPlayers>
 {
     private readonly IGameSessionData gameSessionData;
 
@@ -9,7 +9,7 @@ internal class CheckSignalingInfoToPlayersHandler : IUseCaseHandler<CheckSignali
         this.gameSessionData = gameSessionData;
     }
 
-    public async Task<UseCaseResult> Handle(CheckSignalingInfoToPlayers useCase)
+    public async Task<UseCaseResult> Handle(CheckSignalWithPlayers useCase)
     {
         var gameSession = await gameSessionData
             .GameSessions

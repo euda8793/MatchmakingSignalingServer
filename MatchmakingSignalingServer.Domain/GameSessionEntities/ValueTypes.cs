@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.VisualBasic;
-
-namespace MatchmakingSignalingServer.Domain.GameSessionEntities.ValueTypes;
+﻿namespace MatchmakingSignalingServer.Domain.GameSessionEntities.ValueTypes;
 
 public enum ConnectionState
 {
@@ -20,6 +17,8 @@ public enum InformationType
 
 public static class IntEnum
 {
+    public static void Validate<T>(this T val) where T : Enum => Create<T>((int)(object)val);
+
     public static T Create<T>(int index) where T : Enum
     {
         if (Enum.IsDefined(typeof(T), index))
@@ -28,7 +27,7 @@ public static class IntEnum
         }
         else
         {
-            throw new ArgumentOutOfRangeException(nameof(T));
+            throw new ArgumentOutOfRangeException(typeof(T).Name);
         }
     }
 }

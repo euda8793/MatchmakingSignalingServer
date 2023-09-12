@@ -28,7 +28,9 @@ public class GameSession
 
     private SignalingStep StepSource(PlayerName source) => Steps.First(x => x.Source == source);
 
-    private SignalingStep StepSourceTarget(PlayerName source, PlayerName target) => Steps.First(x => x.Source == source || x.Target == target);
+    private SignalingStep StepTarget(PlayerName target) => Steps.First(x => x.Target == target);
+
+    private SignalingStep StepSourceTarget(PlayerName source, PlayerName target) => Steps.First(x => x.Source == source && x.Target == target);
 
     private List<SignalingStep> StepsTargetingHost => Steps.Where(x => x.Target == Host.PlayerName).ToList();
 
@@ -40,7 +42,7 @@ public class GameSession
     {
         if (Clients.Any(x => x.PlayerName == playerName))
         {
-            throw new ArgumentException($"Player {nameof(playerName)} already exists in {nameof(GameSessionName)} {GameSessionName.Name}");
+            throw new InvalidOperationException($"Player {nameof(playerName)} already exists in {nameof(GameSessionName)} {GameSessionName.Name}");
         }
     } 
 
@@ -79,6 +81,11 @@ public class GameSession
 
     public void RemovePlayer(PlayerName playerName)
     {
+        if (IsPlayerHost(playerName))
+        {
+            throw new InvalidOperationException($"Can't remove host client.");
+        }
+        
         var player = Player(playerName);
         RemoveStepsForPlayer(playerName);
         Clients.Remove(player);
@@ -92,17 +99,6 @@ public class GameSession
     public List<SignalingStep> GetSignalingStepsForHost()
     {
         return StepsTargetingHost;
-    }
-
-    public void UpdateStep(PlayerName requestingPlayerName, InformationType informationType, IceCandidate? iceCandidate, SessionDescription? sessionDescription)
-    {
-        StepSource(requestingPlayerName)
-            .Update(informationType, sessionDescription, iceCandidate);
-    }
-    public void UpdateStepFromHost(PlayerName targetPlayerName, InformationType informationType, IceCandidate? iceCandidate, SessionDescription? sessionDescription)
-    {
-        StepSourceTarget(Host.PlayerName, Player(targetPlayerName).PlayerName)
-            .Update(informationType, sessionDescription, iceCandidate);
     }
 
     public void UpdatePlayerToConnected(PlayerName connectedPlayerName)
@@ -121,6 +117,16 @@ public class GameSession
     public void UpdatePlayerExpirationTime(PlayerName refreshedPlayerName)
     {
         Player(refreshedPlayerName).Refresh();
+    }
+
+    public void SetHostAsTarget(PlayerName targetPlayerName, InformationType informationType, IceCandidate? iceCandidate, SessionDescription? sessionDescription)
+    {
+        StepTarget(targetPlayerName).Update(targetPlayerName, Host.PlayerName, informationType, iceCandidate, sessionDescription);
+    }
+
+    public void SetConnectedPlayerAsTarget(PlayerName connectedPlayerName, InformationType informationType, IceCandidate? iceCandidate, SessionDescription? sessionDescription)
+    {
+        StepSource(connectedPlayerName).Update(Host.PlayerName, connectedPlayerName, informationType, iceCandidate, sessionDescription);
     }
 
     #endregion

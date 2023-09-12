@@ -2,12 +2,10 @@ namespace MatchmakingSignalingServer.Authentication;
 
 public class ApiKeyEndpointFilter : IEndpointFilter
 {
-    private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public ApiKeyEndpointFilter(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
+    public ApiKeyEndpointFilter(IWebHostEnvironment webHostEnvironment)
     {
-        _configuration = configuration;
         _webHostEnvironment = webHostEnvironment;
     }
 
@@ -18,10 +16,7 @@ public class ApiKeyEndpointFilter : IEndpointFilter
             return TypedResults.Unauthorized();
         }
 
-        var apiKey = 
-            _webHostEnvironment.IsDevelopment() ? 
-            _configuration.GetValue<string>(EnvVarNames.API_KEY_CONFIG_NAME) : 
-            Environment.GetEnvironmentVariable(EnvVarNames.API_KEY_CONFIG_NAME);
+        var apiKey = Environment.GetEnvironmentVariable(EnvVarNames.API_KEY_CONFIG_NAME);
 
         if (!apiKey?.Equals(incomingApiKey) ?? true)
         {

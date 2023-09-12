@@ -23,14 +23,18 @@ public class SignalingStep
         InformationType = InformationType.WAITING_FOR_INFORMATION;
     }
 
-    public void Update(InformationType informationType,  SessionDescription? sessionDescription, IceCandidate? iceCandidate)
+    public void Update(PlayerName source, PlayerName target, InformationType informationType, IceCandidate? iceCandidate, SessionDescription? sessionDescription)
     {
-        if (InformationType == InformationType.ICE_CANDIDATE && iceCandidate == null) throw new ArgumentNullException(nameof(iceCandidate));
-        if (InformationType == InformationType.SESSION_DESCRIPTION && sessionDescription == null) throw new ArgumentNullException(nameof(sessionDescription));
-        if (InformationType == InformationType.WAITING_FOR_INFORMATION && sessionDescription != null && iceCandidate != null) throw new ArgumentOutOfRangeException(nameof(informationType));
+        IntEnum.Validate(informationType);
 
+        if (informationType == InformationType.WAITING_FOR_INFORMATION) throw new ArgumentOutOfRangeException(nameof(informationType));
+        if (informationType == InformationType.ICE_CANDIDATE && iceCandidate == null) throw new ArgumentNullException(nameof(iceCandidate));
+        if (informationType == InformationType.SESSION_DESCRIPTION && sessionDescription == null) throw new ArgumentNullException(nameof(sessionDescription));
+
+        Target = target;
+        Source = source;
         InformationType = informationType;
         IceCandidate = iceCandidate;
         SessionDescription = sessionDescription;
-    }  
+    }
 }

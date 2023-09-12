@@ -1,26 +1,25 @@
 ﻿namespace MatchmakingSignalingServer.Domain.UseCaseHandlers;
 
-internal class UpdateSignalingStepFromHostHandler : IUseCaseHandler<UpdateSignalingStepFromHost>
+internal class AcceptSignalAsHostHandler : IUseCaseHandler<AcceptSignalAsHost>
 {
     private readonly IGameSessionData gameSessionData;
 
-    public UpdateSignalingStepFromHostHandler(IGameSessionData gameSessionData)
+    public AcceptSignalAsHostHandler(IGameSessionData gameSessionData)
     {
         this.gameSessionData = gameSessionData;
     }
 
-    public async Task<UseCaseResult> Handle(UpdateSignalingStepFromHost useCase)
+    public async Task<UseCaseResult> Handle(AcceptSignalAsHost useCase)
     {
         var gameSession = await gameSessionData
             .GameSessions
             .AsTracking()
-            .Include(x => x.Steps)
             .Include(x => x.Clients)
+            .Include(x => x.Steps)
             .FirstAsync(x => x.GameSessionName == useCase.GameSessionName);
 
-        gameSession.UpdateStepFromHost(useCase.TargetPlayerName, useCase.InformationType, useCase.IceCandidate, useCase.SessionDescription);
+        gameSession.SetConnectedPlayerAsTarget(useCase.ConnectedPlayerName, useCase.InformationType, useCase.IceCandidate, useCase.SessionDescription);
         await gameSessionData.SaveChangesAsync();
-
         return new UseCaseResult();
     }
 }

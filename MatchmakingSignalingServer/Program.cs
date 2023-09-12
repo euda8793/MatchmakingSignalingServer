@@ -1,4 +1,3 @@
-
 var builder = WebApplication.CreateBuilder(args);
 
 #region Add Services
@@ -6,9 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGameSessionData, GameSessionDBContext>();
-
-
 builder.Services.AddUseCaseHandlers();
+
 #endregion
 
 #region Setup Swagger and Https Redirection
@@ -26,23 +24,23 @@ app.UseHttpsRedirection();
 
 #region Static File Serving
 
-//app.UseDefaultFiles();
+app.UseDefaultFiles();
 
-//var contentTypeProvider = new FileExtensionContentTypeProvider();
-//contentTypeProvider.Mappings[".wasm"] = "application/wasm";
-//contentTypeProvider.Mappings[".pck"] = "application/octet-stream";
+var contentTypeProvider = new FileExtensionContentTypeProvider();
+contentTypeProvider.Mappings[".wasm"] = "application/wasm";
+contentTypeProvider.Mappings[".pck"] = "application/octet-stream";
 
-//app.UseStaticFiles(new StaticFileOptions
-//{
-//    ContentTypeProvider = contentTypeProvider,
-//    OnPrepareResponse = ctx =>
-//    {
-//        ctx.Context.Response.Headers.Append(
-//             "Cross-Origin-Embedder-Policy", "require-corp");
-//        ctx.Context.Response.Headers.Append(
-//             "Cross-Origin-Opener-Policy", "same-origin");
-//    }
-//});
+app.UseStaticFiles(new StaticFileOptions
+{
+    ContentTypeProvider = contentTypeProvider,
+    OnPrepareResponse = ctx =>
+    {
+        ctx.Context.Response.Headers.Append(
+             "Cross-Origin-Embedder-Policy", "require-corp");
+        ctx.Context.Response.Headers.Append(
+             "Cross-Origin-Opener-Policy", "same-origin");
+    }
+});
 
 #endregion
 
@@ -66,13 +64,13 @@ gameSessionsRoutes.MapGet("/{GameSessionCount}", async (
     });
 }).Produces<GameSessionsResult>();
 
-gameSessionsRoutes.MapGet("/{GameSessionName}/Player/{PlayerName}/SignalingStep", async (
+gameSessionsRoutes.MapGet("/{GameSessionName}/Player/{PlayerName}/SignalStatus", async (
     [AsParameters] ExistingPlayer ExistingPlayer,
     IResolveUseCaseHandler resolver) => 
 { 
     return await Catcher.HandleAppAndDomainExceptions(async () =>
     {
-        var useCase = new CheckSignalingInfoFromHost(
+        var useCase = new CheckSignalFromHost(
             ExistingPlayer.GameSessionName,
             ExistingPlayer.PlayerName);
 
@@ -80,13 +78,13 @@ gameSessionsRoutes.MapGet("/{GameSessionName}/Player/{PlayerName}/SignalingStep"
     });
 }).Produces<PlayerSignalingStepResult>();
 
-gameSessionsRoutes.MapGet("/{GameSessionName}/SignalingStep", async (
+gameSessionsRoutes.MapGet("/{GameSessionName}/SignalStatus", async (
     [AsParameters] ExistingGameSession ExistingGameSession,
     IResolveUseCaseHandler resolver) => 
 { 
     return await Catcher.HandleAppAndDomainExceptions(async () =>
     {
-        var useCase = new CheckSignalingInfoToPlayers(
+        var useCase = new CheckSignalWithPlayers(
             ExistingGameSession.GameSessionName);
 
         return await resolver.ResolveAndHandleUseCase(useCase);
@@ -145,7 +143,7 @@ gameSessionsRoutes.MapPut("/{GameSessionName}/Player/{PlayerName}", async (
     });
 });
 
-gameSessionsRoutes.MapPut("/{GameSessionName}/Player/{PlayerName}/Refresh", async (
+gameSessionsRoutes.MapPut("/{GameSessionName}/Player/{PlayerName}/Connected", async (
     [AsParameters] ExistingPlayer ExistingPlayer,
     IResolveUseCaseHandler resolver) =>
 {
@@ -165,90 +163,41 @@ gameSessionsRoutes.MapPut("/{GameSessionName}/Player/{PlayerName}/Refresh", asyn
     });
 });
 
-#endregion
-
-#region PATCH
-
-gameSessionsRoutes.MapPatch("/{GameSessionName}/PlayerToHost/{PlayerName}/IceCandidate", async (
+gameSessionsRoutes.MapPut("/{GameSessionName}/Player/{PlayerName}/PlayerAccept", async (
     [AsParameters] ExistingPlayer ExistingPlayer,
-    [FromBody] IceCandidate IceCandidate,
+    [FromBody] NetworkInfo NetworkInfo,
     IResolveUseCaseHandler resolver) =>
 {
     return await Catcher.HandleAppAndDomainExceptions(async () =>
     {
-        IceCandidate.Validate();
-
-        var useCase = new UpdateSignalingStep(
+        var useCase = new AcceptSignalAsPlayer(
             ExistingPlayer.GameSessionName,
             ExistingPlayer.PlayerName,
-            InformationType.ICE_CANDIDATE,
-            IceCandidate,
-            null);
+            NetworkInfo.InformationType,
+            NetworkInfo.IceCandidate,
+            NetworkInfo.SessionDescription);
 
         return await resolver.ResolveAndHandleUseCase(useCase);
     });
 });
 
-gameSessionsRoutes.MapPatch("/{GameSessionName}/PlayerToHost/{PlayerName}/SessionDescription", async (
+gameSessionsRoutes.MapPut("/{GameSessionName}/Player/{PlayerName}/HostAccept", async (
     [AsParameters] ExistingPlayer ExistingPlayer,
-    [FromBody] SessionDescription SessionDescription,
+    [FromBody] NetworkInfo NetworkInfo,
     IResolveUseCaseHandler resolver) =>
 {
     return await Catcher.HandleAppAndDomainExceptions(async () =>
     {
-        SessionDescription.Validate();
-
-        var useCase = new UpdateSignalingStep(
+        var useCase = new AcceptSignalAsHost(
             ExistingPlayer.GameSessionName,
             ExistingPlayer.PlayerName,
-            InformationType.SESSION_DESCRIPTION,
-            null,
-            SessionDescription);
+            NetworkInfo.InformationType,
+            NetworkInfo.IceCandidate,
+            NetworkInfo.SessionDescription);
 
         return await resolver.ResolveAndHandleUseCase(useCase);
     });
 });
-
-gameSessionsRoutes.MapPatch("/{GameSessionName}/HostToPlayer/{PlayerName}/IceCandidate", async (
-    [AsParameters] ExistingPlayer ExistingPlayer,
-    [FromBody] IceCandidate IceCandidate,
-    IResolveUseCaseHandler resolver) =>
-{
-    return await Catcher.HandleAppAndDomainExceptions(async () =>
-    {
-        IceCandidate.Validate();
-
-        var useCase = new UpdateSignalingStepFromHost(
-            ExistingPlayer.GameSessionName,
-            ExistingPlayer.PlayerName,
-            InformationType.ICE_CANDIDATE,
-            IceCandidate,
-            null);
-
-        return await resolver.ResolveAndHandleUseCase(useCase);
-    });
-});
-
-gameSessionsRoutes.MapPatch("/{GameSessionName}/HostToPlayer/{PlayerName}/SessionDescription", async (
-    [AsParameters] ExistingPlayer ExistingPlayer,
-    [FromBody] SessionDescription SessionDescription,
-    IResolveUseCaseHandler resolver) =>
-{
-    return await Catcher.HandleAppAndDomainExceptions(async () =>
-    {
-        SessionDescription.Validate();
-
-        var useCase = new UpdateSignalingStepFromHost(
-            ExistingPlayer.GameSessionName,
-            ExistingPlayer.PlayerName,
-            InformationType.SESSION_DESCRIPTION,
-            null,
-            SessionDescription);
-
-        return await resolver.ResolveAndHandleUseCase(useCase);
-    });
-});
-
 
 #endregion
 
